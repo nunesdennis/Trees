@@ -8,25 +8,29 @@
 
 import UIKit
 
-class ViewController: UIViewController,UITextFieldDelegate {
-
+class ViewController: UIViewController {
+    
+    // MARK: - Outlets
     @IBOutlet weak var treeView: TreeView!
     @IBOutlet weak var textField: UITextField!
-    var tree:RBTree?
-    var elements:[Int] = []
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-         self.addDoneButtonOnKeyboard()
+    // MARK: - Properties
+    var tree: RBTree?
+    var elements: [Int] = []
+    
+    // MARK: - Lifecycle
+    override  viewDidLoad() {
+        super.viewDifuncdLoad()
+        self.addDoneButtonOnKeyboard()
     }
     
-    func addDoneButtonOnKeyboard()
-    {
-        let doneToolbar: UIToolbar = UIToolbar(frame: CGRectMake(0, 0, 320, 50))
+    // MARK: - Methods
+    func addDoneButtonOnKeyboard() {
+        let doneToolbar = UIToolbar(frame: CGRectMake(0, 0, 320, 50))
         doneToolbar.barStyle = UIBarStyle.BlackTranslucent
         
         let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
-        let done: UIBarButtonItem = UIBarButtonItem(title: "Adicionar", style: UIBarButtonItemStyle.Done, target: self, action: Selector("doneButtonAction"))
+        let done = UIBarButtonItem(title: "Adicionar", style: UIBarButtonItemStyle.Done, target: self, action: #selector(doneButtonAction))
         
         let items = NSMutableArray()
         items.addObject(flexSpace)
@@ -36,21 +40,16 @@ class ViewController: UIViewController,UITextFieldDelegate {
         doneToolbar.sizeToFit()
         
         self.textField.inputAccessoryView = doneToolbar
-        
     }
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        doneButtonAction()
-        return true
-    }
-    func doneButtonAction()
-    {
+    
+    @objc func doneButtonAction() {
         textField.resignFirstResponder()
         if textField.text != "" {
             if let num = Int(textField.text!){
                 if tree == nil {
                     elements.append(num)
                     tree = RBTree(rootKey: num, rootObject: createObject(num))
-                }else{
+                } else {
                     elements.append(num)
                     tree = criarArvore(elements)
                 }
@@ -61,11 +60,11 @@ class ViewController: UIViewController,UITextFieldDelegate {
         textField.text = ""
     }
     
-    func createObject(key:Int)->String{
+    func createObject(key:Int)->String {
         return "Objeto \(key)"
     }
     
-    func criarArvore(numeros:[Int])-> RBTree{
+    func criarArvore(numeros: [Int])-> RBTree {
         let arvoreRN = RBTree(rootKey: numeros[0], rootObject: createObject(numeros[0]))
         
         for num in numeros {
@@ -75,7 +74,7 @@ class ViewController: UIViewController,UITextFieldDelegate {
         return arvoreRN
     }
     
-    func impressoes(arvore:RBTree){
+    func impressoes(arvore: RBTree) {
         print("//Em ordem //")
         arvore.printInOrder()
         print("//Pós ordem //")
@@ -83,7 +82,8 @@ class ViewController: UIViewController,UITextFieldDelegate {
         print("//Pré ordem //")
         arvore.printPreOrder()
     }
-    func updateTreeView(tree:RBTree){
+    
+    func updateTreeView(tree: RBTree) {
         let frame = CGRectMake(0, 0, self.view.window!.frame.width,self.view.window!.frame.height)
         let example = TreeView(frame: frame)
         example.backgroundColor = UIColor(red: 119/255, green: 235/255, blue: 228/255, alpha: 1.0)
@@ -94,3 +94,10 @@ class ViewController: UIViewController,UITextFieldDelegate {
     }
 }
 
+// MARK: - UITextFieldDelegate
+extension ViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        doneButtonAction()
+        return true
+    }
+}
